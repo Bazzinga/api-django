@@ -17,7 +17,7 @@ class Snippet(models.Model):
   owner = models.ForeignKey('auth.User', related_name='snippets')
   highlighted = models.TextField()
   code = models.TextField()
-  linenos = models.TextField(default = False)
+  linenos = models.BooleanField(default = False)
   language = models.CharField(choices = LANGUAGE_CHOICES,
                               default = 'python',
                               max_length = 100)
@@ -34,7 +34,7 @@ class Snippet(models.Model):
     options = self.title and {'title':self.title} or {}
     formatter = HtmlFormatter(style=self.style, linenos=linenos,
                               full=True, **options)
-    self.highlighted = highlighted(self.code, lexer, formatter)
+    self.highlighted = highlight(self.code, lexer, formatter)
     super(Snippet, self).save(*args, **kwargs)
 
   class Meta:
